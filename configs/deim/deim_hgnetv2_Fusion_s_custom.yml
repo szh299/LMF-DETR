@@ -1,0 +1,53 @@
+__include__: [
+  '../dfine/dfine_hgnetv2_s_custom.yml',
+  '../base/deim.yml'
+]
+
+print_freq: 20
+output_dir: ./outputs/deim_hgnetv2_s_Fusion
+
+DEIM:
+  backbone: HGNetv2_Fusion
+
+HGNetv2_Fusion:
+  name: 'B0'
+  return_idx: [1, 2, 3]
+  freeze_at: -1
+  freeze_norm: False
+  use_lab: True
+  pretrained: False
+
+HybridEncoder:
+  in_channels: [128, 256, 512]
+
+optimizer:
+  type: AdamW
+  params: 
+    - 
+      params: '^(?=.*backbone)(?!.*(bn|norm)).*$'
+      lr: 0.0001
+    - 
+      params: '^(?=.*(?:norm|bn)).*$'     # except bias  26.031 GFLOPS   MACs:12.9448 GMACs   Params:10238730 
+      weight_decay: 0.
+
+  lr: 0.0002
+  betas: [0.9, 0.999]
+  weight_decay: 0.0001
+
+epoches: 300
+flat_epoch: 148
+no_aug_epoch: 12
+
+train_dataloader: 
+  dataset: 
+    transforms:
+      policy:
+        epoch: [4, 148, 288]
+
+  collate_fn:
+    mixup_epochs: [4, 148]
+    stop_epoch: 288
+  total_batch_size: 8
+
+val_dataloader:
+  total_batch_size: 8
