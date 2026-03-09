@@ -1,9 +1,6 @@
 # LMF-DETR
  A Feature Enhancement Algorithm for Steel Surface Defect Detection
 ### 训练命令
-
-##### nohup<主要用于linux后台训练> 必看视频-深度学习炼丹小技巧:https://www.bilibili.com/video/BV1q3SZYsExc/
-nohup xxx > logs/xxx.log 2>&1 & tail -f logs/xxx.log
 ###### 示例
 CUDA_VISIBLE_DEVICES=0 nohup python train.py -c configs/deim/deim_hgnetv2_n_custom.yml --seed=0 > train.log 2>&1 & tail -f train.log  
 CUDA_VISIBLE_DEVICES=0,1,2,3 nohup python -m torch.distributed.run --nproc_per_node 4 train.py -c configs/deim/deim_hgnetv2_n_custom.yml --seed=0 > train.log 2>&1 & tail -f train.log
